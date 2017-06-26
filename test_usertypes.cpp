@@ -1835,3 +1835,49 @@ TEST_CASE("usertype/noexcept-methods", "make sure noexcept functinos and methods
 	REQUIRE(v1 == 0x61);
 	REQUIRE(v2 == 0x62);
 }
+
+TEST_CASE("usertype/unique-usertype-type-preservation", "test certain combinations of usertype and unique_usertypes with usertype method binding") {
+
+	struct bar {};
+	struct foo{
+		//dereferencing the unique_usertype
+		static void arg_direct(const bar&) {}
+		static void arg_self_direct(const bar& i, foo&) {arg_direct(i);}
+		static void self_arg_direct(foo& instance, const bar& i) {arg_self_direct(i, instance);}
+		void implicit_self_arg_direct(const bar& i) {arg_self_direct(i, *this);}
+		//directly using the unique_usertype as argument
+		static void arg(const std::unique_ptr<bar>& ptr) {arg_direct(*ptr);}
+		static void arg_self(const std::unique_ptr<bar>& ptr, foo& instance) {arg_self_direct(*ptr, instance);}
+		static void self_arg(foo& instance, const std::unique_ptr<bar>& ptr) {self_arg_direct(instance, *ptr);}
+		void implicit_self_arg(const std::unique_ptr<bar>& ptr) {implicit_self_arg_direct(*ptr);}
+		static void self_copy_arg(foo instance, const std::unique_ptr<bar>& ptr) {self_arg(instance, ptr);}
+	};
+
+	sol::state s;
+	s.open_libraries();
+
+	s.new_usertype<foo>("foo",
+		 "ad", &foo::arg_direct,
+		 "asd", &foo::arg_self_direct,
+		 "sad", &foo::self_arg_direct,
+		 "isad", &foo::implicit_self_arg_direct,
+		 "a", &foo::arg,
+		 "as", &foo::arg_self,
+		 "sa", &foo::self_arg, //breaks
+		 "isa", &foo::implicit_self_arg, //breaks
+		 "sca", &foo::self_copy_arg //breaks
+	);
+	s["f"] = foo{};
+	s["i"] = std::make_unique<bar>();
+
+	REQUIRE_NOTHROW(s.script("f.ad(i, f)"));
+	REQUIRE_NOTHROW(s.script("f.asd(i, f)"));
+	REQUIRE_NOTHROW(s.script("f.sad(f, i)"));
+	REQUIRE_NOTHROW(s.script("f.isad(f, i)"));
+	REQUIRE_NOTHROW(s.script("f.a(i, f)"));
+	REQUIRE_NOTHROW(s.script("f.as(i, f)"));
+	REQUIRE_NOTHROW(s.script("f.sa(f, i)"));
+	REQUIRE_NOTHROW(s.script("f.isa(f, i)"));
+	REQUIRE_NOTHROW(s.script("f.sca(f, i)"));
+
+}

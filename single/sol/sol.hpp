@@ -20,8 +20,8 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // This file was generated with a script.
-// Generated 2017-07-02 15:00:53.968503 UTC
-// This header was generated with sol v2.18.0 (revision 03c6556)
+// Generated 2017-07-02 15:39:35.396442 UTC
+// This header was generated with sol v2.18.0 (revision d2cc376)
 // https://github.com/ThePhD/sol2
 
 #ifndef SOL_SINGLE_INCLUDE_HPP
@@ -32,6 +32,13 @@
 #ifndef SOL_HPP
 #define SOL_HPP
 
+// beginning of sol/global_begin.hpp
+
+// beginning of sol/file_begin.hpp
+
+#ifndef SOL_GLOBAL_HAS_BEGUN
+#define SOL_FILE_HAS_BEGUN
+
 #if defined(UE_BUILD_DEBUG) || defined(UE_BUILD_DEVELOPMENT) || defined(UE_BUILD_TEST) || defined(UE_BUILD_SHIPPING) || defined(UE_SERVER)
 #define SOL_INSIDE_UNREAL
 #endif // Unreal Engine 4 bullshit
@@ -40,7 +47,7 @@
 #ifdef check
 #define SOL_INSIDE_UNREAL_REMOVED_CHECK
 #undef check
-#endif 
+#endif
 #endif // Unreal Engine 4 Bullshit
 
 #ifdef __GNUC__
@@ -53,7 +60,13 @@
 #elif defined _MSC_VER
 #pragma warning( push )
 #pragma warning( disable : 4324 ) // structure was padded due to alignment specifier
-#endif // g++
+#endif // g++, VS
+
+#endif // SOL_GLOBAL_HAS_BEGUN
+// end of sol/file_begin.hpp
+
+#define SOL_GLOBAL_HAS_BEGUN
+// end of sol/global_begin.hpp
 
 // beginning of sol/state.hpp
 
@@ -2261,6 +2274,35 @@ namespace std
 
 # undef TR2_OPTIONAL_REQUIRES
 # undef TR2_OPTIONAL_ASSERTED_EXPRESSION
+
+// beginning of sol/file_end.hpp
+
+#ifndef SOL_GLOBAL_HAS_BEGUN
+
+#ifdef SOL_FILE_HAS_BEGUN
+#undef SOL_FILE_HAS_BEGUN
+#else
+#error "sol/file_end.hpp" was included without including "sol/file_begin.hpp" beforehand; something went wrong!
+#endif // SOL_FILE_HAS_BEGUN
+
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#elif defined _MSC_VER
+#pragma warning( push )
+#endif // g++
+
+#ifdef SOL_INSIDE_UNREAL
+#ifdef SOL_INSIDE_UNREAL_REMOVED_CHECK
+#if DO_CHECK
+#define check(expr) { if(UNLIKELY(!(expr))) { FDebug::LogAssertFailedMessage( #expr, __FILE__, __LINE__ ); _DebugBreakAndPromptForRemote(); FDebug::AssertFailed( #expr, __FILE__, __LINE__ ); CA_ASSUME(false); } }
+#else
+#define check(expr) { CA_ASSUME(expr); }
+#endif
+#endif
+#endif // Unreal Engine 4 Bullshit
+
+#endif // SOL_GLOBAL_HAS_BEGUN
+// end of sol/file_end.hpp
 
 # endif // SOL_OPTIONAL_IMPLEMENTATION_HPP
 // end of sol/optional_implementation.hpp
@@ -14854,21 +14896,14 @@ namespace sol {
 
 // end of sol/coroutine.hpp
 
-#ifdef __GNUC__
-#pragma GCC diagnostic pop
-#elif defined _MSC_VER
-#pragma warning( push )
-#endif // g++
+// beginning of sol/global_end.hpp
 
-#ifdef SOL_INSIDE_UNREAL
-#ifdef SOL_INSIDE_UNREAL_REMOVED_CHECK
-#if DO_CHECK
-#define check(expr) { if(UNLIKELY(!(expr))) { FDebug::LogAssertFailedMessage( #expr, __FILE__, __LINE__ ); _DebugBreakAndPromptForRemote(); FDebug::AssertFailed( #expr, __FILE__, __LINE__ ); CA_ASSUME(false); } }
+#ifdef SOL_GLOBAL_HAS_BEGUN
+#undef SOL_GLOBAL_HAS_BEGUN
 #else
-#define check(expr) { CA_ASSUME(expr); }
-#endif
-#endif 
-#endif // Unreal Engine 4 Bullshit
+#error "sol/global_end.hpp" was included without including "sol/global_begin.hpp" beforehand; something went wrong!
+#endif // SOL_GLOBAL_HAS_BEGUN
+// end of sol/global_end.hpp
 
 #endif // SOL_HPP
 // end of sol.hpp

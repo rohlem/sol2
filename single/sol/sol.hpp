@@ -20,8 +20,8 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // This file was generated with a script.
-// Generated 2017-07-02 14:28:35.880269 UTC
-// This header was generated with sol v2.18.0 (revision b132f34)
+// Generated 2017-07-02 15:00:53.968503 UTC
+// This header was generated with sol v2.18.0 (revision 03c6556)
 // https://github.com/ThePhD/sol2
 
 #ifndef SOL_SINGLE_INCLUDE_HPP
@@ -1158,6 +1158,8 @@ inline void luaL_pushresult(luaL_Buffer_52 *B) {
 
 // beginning of sol/in_place.hpp
 
+#include <cstddef>
+
 namespace sol {
 
 	namespace detail {
@@ -2289,7 +2291,6 @@ namespace sol {
 // beginning of sol/tuple.hpp
 
 #include <tuple>
-#include <cstddef>
 
 namespace sol {
 	namespace detail {

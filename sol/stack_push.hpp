@@ -27,6 +27,7 @@
 #include "optional.hpp"
 #include "usertype_traits.hpp"
 #include <memory>
+#include <type_traits>
 #ifdef SOL_CODECVT_SUPPORT
 #include <codecvt>
 #include <locale>
@@ -704,7 +705,7 @@ namespace sol {
 				if (t == nullopt) {
 					return stack::push(L, nullopt);
 				}
-				return stack::push(L, t.value());
+				return stack::push(L, static_cast<std::conditional_t<std::is_lvalue_reference<T>::value, O&, O&&>>(t.value()));
 			}
 		};
 

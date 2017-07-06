@@ -20,8 +20,8 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // This file was generated with a script.
-// Generated 2017-07-02 15:39:35.396442 UTC
-// This header was generated with sol v2.18.0 (revision d2cc376)
+// Generated 2017-07-06 15:16:17.231538 UTC
+// This header was generated with sol v2.18.0 (revision bcf2987)
 // https://github.com/ThePhD/sol2
 
 #ifndef SOL_SINGLE_INCLUDE_HPP
@@ -37,6 +37,10 @@
 // beginning of sol/file_begin.hpp
 
 #ifndef SOL_GLOBAL_HAS_BEGUN
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wheader-guard"
+#endif // clang
 #define SOL_FILE_HAS_BEGUN
 
 #if defined(UE_BUILD_DEBUG) || defined(UE_BUILD_DEVELOPMENT) || defined(UE_BUILD_TEST) || defined(UE_BUILD_SHIPPING) || defined(UE_SERVER)
@@ -2300,6 +2304,10 @@ namespace std
 #endif
 #endif
 #endif // Unreal Engine 4 Bullshit
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif // clang
 
 #endif // SOL_GLOBAL_HAS_BEGUN
 // end of sol/file_end.hpp
@@ -7280,7 +7288,7 @@ namespace sol {
 				if (t == nullopt) {
 					return stack::push(L, nullopt);
 				}
-				return stack::push(L, t.value());
+				return stack::push(L, static_cast<std::conditional_t<std::is_lvalue_reference<T>::value, O&, O&&>>(t.value()));
 			}
 		};
 
@@ -14622,6 +14630,7 @@ namespace sol {
 		state(lua_CFunction panic = default_at_panic) : unique_base(luaL_newstate(), lua_close),
 			state_view(unique_base::get()) {
 			set_panic(panic);
+			sol::protected_function::set_default_handler(sol::object(lua_state(), in_place, default_error_handler));
 			stack::luajit_exception_handler(unique_base::get());
 		}
 

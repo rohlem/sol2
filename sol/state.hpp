@@ -44,7 +44,7 @@ namespace sol {
 	inline int default_error_handler(lua_State*L) {
 		using namespace sol;
 		std::string msg = "An unknown error has triggered the default error handler";
-		optional<string_detail::string_shim> maybetopmsg = stack::check_get<string_detail::string_shim>(L, 1);
+		optional<string_detail::string_shim> maybetopmsg = stack::check_get<string_detail::string_shim>(L, -1);
 		if (maybetopmsg) {
 			const string_detail::string_shim& topmsg = maybetopmsg.value();
 			msg.assign(topmsg.c_str(), topmsg.size());
